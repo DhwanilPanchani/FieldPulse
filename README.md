@@ -26,67 +26,235 @@ Claude Code Plugin    Web Dashboard
 
 **Developers / Researchers — Claude Code Plugin**
 
-Install the plugin, run three-agent full analysis (weather + soil + satellite NDVI) from your terminal. Requires Claude Code and Python 3.9+.
+# Fieldpulse — Claude Code Plugin
 
-```bash
-claude plugin install github:DhwanilPanchani/fieldpulse
-```
-
-Commands: `/fieldpulse:analyze`, `/fieldpulse:monitor`, `/fieldpulse:report`, `/fieldpulse:explain`
-
-**Everyone Else — Web Dashboard**
-
-No Claude account needed. Visit [https://fieldpulseagent.vercel.app/](https://fieldpulseagent.vercel.app/), type a location, click Analyze. Powered by Next.js on Vercel. Weather data only due to browser CORS limitations on satellite/soil APIs — see [Limitations](#honest-limitations).
+Fieldpulse is an agricultural intelligence plugin for Claude Code that combines satellite imagery, soil analysis, and weather forecasting to generate crop risk insights and actionable recommendations.
 
 ---
 
-## Quick Start — Claude Code Plugin
+# Quick Start
+
+## Requirements
+
+Before installing, make sure you have:
+
+- Claude Code ≥ 2.1.32
+- Python ≥ 3.9
+- macOS, Linux, or Windows
+- Internet connection
+- No API keys required
+
+---
+
+# Installation
+
+## Step 1 — Clone Repository & Run Setup
 
 ```bash
-# 1. Clone the repository
 git clone https://github.com/DhwanilPanchani/fieldpulse
 cd fieldpulse
+python3 scripts/setup.py
+```
 
-# 2. Run setup (creates ~/.fieldpulse/venv, installs MCP servers)
-python scripts/setup.py
+The setup script will:
 
-# 3. Open Claude Code in this directory
-#    .mcp.json auto-registers the three local MCP servers
+- Create a virtual environment at:
 
-# 4. Run your first analysis
+```bash
+~/.fieldpulse/venv
+```
+
+- Print the MCP registration commands required for your machine
+
+Copy and run all generated commands.
+
+Example:
+
+```bash
+claude mcp add fieldpulse-satellite -- ~/.fieldpulse/venv/bin/python /your/path/fieldpulse/mcp_servers/satellite_mcp.py
+
+claude mcp add fieldpulse-soil -- ~/.fieldpulse/venv/bin/python /your/path/fieldpulse/mcp_servers/soil_mcp.py
+
+claude mcp add fieldpulse-weather -- ~/.fieldpulse/venv/bin/python /your/path/fieldpulse/mcp_servers/weather_mcp.py
+```
+
+---
+
+## Verify MCP Connections
+
+```bash
+claude mcp list
+```
+
+Expected output:
+
+```bash
+fieldpulse-satellite: ... ✓ Connected
+fieldpulse-soil:      ... ✓ Connected
+fieldpulse-weather:   ... ✓ Connected
+```
+
+---
+
+## Step 2 — Configure Git for HTTPS
+
+This is a one-time setup required for plugin installation.
+
+### Recommended (Global)
+
+```bash
+git config --global url."https://github.com/".insteadOf "git@github.com:"
+```
+
+### Scoped Alternative (Only for Fieldpulse)
+
+If you already use SSH for your own GitHub repositories:
+
+```bash
+git config --global url."https://github.com/DhwanilPanchani/".insteadOf "git@github.com:DhwanilPanchani/"
+```
+
+---
+
+## Step 3 — Install the Plugin
+
+```bash
+claude plugin marketplace add https://github.com/DhwanilPanchani/fieldpulse.git
+
+claude plugin install fieldpulse
+```
+
+---
+
+# First Run
+
+Launch Claude Code:
+
+```bash
+claude
+```
+
+Then run:
+
+```bash
 /fieldpulse:analyze "Punjab, India" --crop wheat --radius 10km
 ```
 
-**What you'll see in the terminal:**
+---
 
-```
----FIELDPULSE RESULT---
+# Example Output
+
+```text
+--- FIELDPULSE RESULT ---
+
 Location : Punjab, India
-Crop     : wheat  |  Radius: 10km  |  2026-05-05
+Crop     : wheat
+Radius   : 10km
+Date     : 2026-05-05
 
 RISK LEVEL: HIGH 🟠
 
 Outlook:
-  30 days : HIGH 🟠
-  60 days : SEVERE 🔴
-  90 days : HIGH 🟠
+30 days : HIGH 🟠
+60 days : CRITICAL 🔴
+90 days : HIGH 🟠
 
 Key Signals:
-  Vegetation : NDVI mean 0.56 — within season range, +8% vs regional baseline.
-  Soil       : pH 8.7 (alkaline) — above optimal for wheat; may limit iron
-               and zinc availability.
-  Weather    : Water deficit tracking; heat stress days above 32°C being
-               counted toward grain-fill threshold.
+Vegetation :
+NDVI mean 0.56 — within season range,
++8% vs regional baseline.
+
+Soil :
+pH 8.7 (alkaline) — above optimal for wheat;
+may limit iron and zinc availability.
+
+Weather :
+Water deficit tracking;
+12 heat stress days above 32°C forecast
+during grain-fill window.
 
 Top Action:
-  Monitor irrigation schedule against forecast ET0 deficit.
-  Apply micronutrient foliar spray if yellowing appears (pH-induced deficiency).
+- Monitor irrigation schedule against forecast ET₀ deficit
+- Apply micronutrient foliar spray if yellowing appears
+  (pH-induced deficiency)
 
-Report saved: ./fieldpulse_reports/punjab_india_20260505_143211.md
------------------------
+Report saved:
+./fieldpulse_reports/punjab_india_20260505_143211.md
 ```
 
-Reports are always saved to `./fieldpulse_reports/` as Markdown files.
+---
+
+# Reports
+
+Generated reports are automatically saved as Markdown files inside:
+
+```bash
+./fieldpulse_reports/
+```
+
+Each report includes:
+
+- Crop risk assessment
+- Vegetation analysis
+- Soil condition analysis
+- Weather stress forecasting
+- Actionable recommendations
+
+---
+
+# Architecture
+
+Fieldpulse uses three MCP servers:
+
+| MCP Server | Purpose |
+|---|---|
+| `fieldpulse-satellite` | Satellite vegetation analysis |
+| `fieldpulse-soil` | Soil chemistry & fertility analysis |
+| `fieldpulse-weather` | Weather forecasting & climate stress analysis |
+
+---
+
+# Troubleshooting
+
+## MCP Server Not Connected
+
+Verify all MCP servers are registered:
+
+```bash
+claude mcp list
+```
+
+If missing, rerun the setup script:
+
+```bash
+python3 scripts/setup.py
+```
+
+---
+
+## Plugin Install Fails
+
+Make sure GitHub URLs are configured for HTTPS:
+
+```bash
+git config --global --get-regexp url
+```
+
+---
+
+## Python Version Issues
+
+Check your Python version:
+
+```bash
+python3 --version
+```
+
+Minimum supported version:
+
+```text
+Python 3.9+
+```
 
 ---
 
