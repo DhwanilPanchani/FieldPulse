@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "fieldpulse-weather": {
+      "command": "${userHome}/.fieldpulse/venv/bin/python",
+      "args": [
+        "mcp_servers/weather_mcp.py"
+      ],
+      "env": {
+        "PYTHONUNBUFFERED": "1",
+        "PYTHONPATH": "${pluginRoot}/mcp_servers"
+      }
+    }
+  }
+}

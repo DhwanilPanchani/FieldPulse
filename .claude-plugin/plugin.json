@@ -1,0 +1,14 @@
+{
+  "name": "fieldpulse",
+  "description": "Multi-agent agricultural intelligence. Detects soil degradation and crop failure risk using Sentinel-2 satellite, ISRIC SoilGrids, and Open-Meteo weather data. Zero hardware required. Free public APIs only.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Dhwanil Panchani",
+    "url": "https://github.com/DhwanilPanchani"
+  },
+  "repository": "https://github.com/DhwanilPanchani/fieldpulse",
+  "license": "MIT",
+  "minClaudeCodeVersion": "2.1.32",
+  "permissions": ["network", "filesystem:read", "filesystem:write"],
+  "setupScript": "scripts/setup.sh"
+}

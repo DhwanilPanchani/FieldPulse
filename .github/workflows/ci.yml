@@ -1,0 +1,90 @@
+name: FieldPulse CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.9", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r mcp_servers/requirements.txt
+          pip install pytest pytest-asyncio pytest-cov
+
+      - name: Run unit tests (no network)
+        run: |
+          pytest tests/ \
+            --ignore=tests/test_integration.py \
+            -v \
+            --tb=short
+
+      - name: Coverage check
+        run: |
+          pytest tests/ \
+            --ignore=tests/test_integration.py \
+            --cov=mcp_servers \
+            --cov-report=term-missing \
+            --cov-fail-under=80
+        continue-on-error: true  # Don't fail build on coverage drop — report only
+
+  dependency-audit:
+    name: Dependency Vulnerability Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Audit dependencies for known CVEs
+        run: |
+          pip-audit -r mcp_servers/requirements.txt --format json --output audit-report.json || true
+          pip-audit -r mcp_servers/requirements.txt
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dependency-audit-report
+          path: audit-report.json
+
+  lint:
+    name: Lint + Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install linting tools
+        run: pip install ruff
+
+      - name: Ruff lint
+        run: ruff check mcp_servers/ tests/ --output-format=github

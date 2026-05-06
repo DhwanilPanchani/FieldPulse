@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Node / Next.js
+app/node_modules/
+app/.next/
+app/.env.local
+app/.env*.local
+
+# Environment & secrets
+.env
+.env.local
+.env*.local
+*.pem
+*.key
+
+# Claude local settings (machine-specific permissions)
+.claude/settings.local.json
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Generated reports
+fieldpulse_report_*.md
+
+# Cache
+*.cache

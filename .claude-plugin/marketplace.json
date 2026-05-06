@@ -1,0 +1,23 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "fieldpulse-local",
+  "description": "Local marketplace for Fieldpulse development",
+  "owner": {
+    "name": "Dhwanil Panchani",
+    "email": "dhwanilpanchani@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "fieldpulse",
+      "description": "Multi-agent agricultural intelligence platform",
+      "author": {
+        "name": "Dhwanil Panchani"
+      },
+      "category": "data",
+      "source": {
+        "source": "local",
+        "path": "/Users/dhwanilpanchani/Desktop/agrosentinel"
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+# FieldPulse MCP server dependencies — exact pins
+# Generate hash-verified lockfile with:
+#   pip install pip-tools
+#   pip-compile requirements.txt --generate-hashes -o requirements.lock.txt
+
+mcp==1.9.2
+httpx==0.27.2
+pydantic==2.9.2
+cachetools==5.5.0
+anyio==4.6.2
+pystac-client==0.7.7
+planetary-computer==1.0.0
+rasterio==1.3.10
+numpy==1.26.4
+python-dateutil==2.9.0
+shapely==2.0.6
+pyproj==3.6.1

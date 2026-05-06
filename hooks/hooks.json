@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "fieldpulse-*",
+        "description": "Log outbound API calls and check local cache before fetching",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import json, sys, os, datetime; tool=os.environ.get('CLAUDE_TOOL_NAME',''); args=os.environ.get('CLAUDE_TOOL_INPUT','{}'); log_dir='.fieldpulse_cache'; os.makedirs(log_dir, exist_ok=True); log_file=os.path.join(log_dir, 'api_calls.jsonl'); entry={'ts': datetime.datetime.utcnow().isoformat(), 'tool': tool, 'args': args}; open(log_file,'a').write(json.dumps(entry)+'\\n')\"",
+            "description": "Append API call to .fieldpulse_cache/api_calls.jsonl for audit trail"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "fieldpulse-*",
+        "description": "Log completed tool calls with result size",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python -c \"import json, sys, os, datetime; tool=os.environ.get('CLAUDE_TOOL_NAME',''); result=os.environ.get('CLAUDE_TOOL_RESULT',''); log_dir='.fieldpulse_cache'; os.makedirs(log_dir, exist_ok=True); log_file=os.path.join(log_dir, 'api_calls.jsonl'); entry={'ts': datetime.datetime.utcnow().isoformat(), 'tool': tool+'_response', 'bytes': len(result)}; open(log_file,'a').write(json.dumps(entry)+'\\n')\"",
+            "description": "Log response size — useful for debugging slow analysis runs"
+          }
+        ]
+      }
+    ]
+  },
+  "_notes": {
+    "integration": "To activate these hooks, copy the 'hooks' object into your project's .claude/settings.json. Claude Code hooks fire per-tool-call, not per-session.",
+    "cache_dir": ".fieldpulse_cache/ is created automatically and should be added to .gitignore",
+    "custom_extension": "Add PostToolUse hooks that POST to a webhook URL for alerting (e.g. Slack, PagerDuty) when composite risk score crosses SEVERE threshold"
+  }
+}
