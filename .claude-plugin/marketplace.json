@@ -16,7 +16,8 @@
       "category": "data",
       "source": {
         "source": "github",
-        "repo": "DhwanilPanchani/fieldpulse"
+        "repo": "DhwanilPanchani/fieldpulse",
+        "url": "https://github.com/DhwanilPanchani/fieldpulse.git"
       },
       "homepage": "https://github.com/DhwanilPanchani/fieldpulse"
     }
