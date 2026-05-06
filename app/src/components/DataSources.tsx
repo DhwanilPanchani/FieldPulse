@@ -7,66 +7,80 @@ interface Props {
   satellite: SatelliteData
 }
 
+function Source({
+  status,
+  name,
+  detail,
+}: {
+  status: 'ok' | 'warn'
+  name: string
+  detail: string
+}) {
+  return (
+    <div className="flex items-start gap-3">
+      <span
+        className={`mt-0.5 text-sm font-bold ${status === 'ok' ? 'text-green-500' : 'text-amber-500'}`}
+      >
+        {status === 'ok' ? '✓' : '⚠'}
+      </span>
+      <div>
+        <p className="text-sm font-medium text-gray-300">{name}</p>
+        <p className="text-xs text-gray-500">{detail}</p>
+      </div>
+    </div>
+  )
+}
+
 export default function DataSources({ analyzedAt, satellite }: Props) {
-  const date = new Date(analyzedAt).toLocaleString()
+  const date = new Date(analyzedAt).toLocaleString('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  })
 
   return (
-    <div className="rounded-2xl bg-[#1a1d27] p-6 shadow-md">
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-widest text-gray-400">
+    <div className="rounded-2xl border border-white/5 bg-[#0a160a] p-6">
+      <h2 className="mb-4 text-xs font-semibold uppercase tracking-widest text-gray-500">
         Data Sources
       </h2>
 
-      <ul className="space-y-2 text-sm">
-        <li className="flex gap-2">
-          <span>✅</span>
-          <span>
-            <strong className="text-white">Weather:</strong>{' '}
-            <span className="text-gray-400">
-              Open-Meteo archive + forecast (real-time, free, open)
-            </span>
-          </span>
-        </li>
-        <li className="flex gap-2">
-          <span>✅</span>
-          <span>
-            <strong className="text-white">Soil moisture:</strong>{' '}
-            <span className="text-gray-400">NASA POWER satellite (2022–2024 average)</span>
-          </span>
-        </li>
-        <li className="flex gap-2">
-          <span>⚠️</span>
-          <span>
-            <strong className="text-white">Soil chemistry:</strong>{' '}
-            <span className="text-gray-400">
-              Regional scientific estimates (FAO / USDA / ICAR) — not field-specific
-            </span>
-          </span>
-        </li>
-        <li className="flex gap-2">
-          <span>{satellite.available ? '✅' : '⚠️'}</span>
-          <span>
-            <strong className="text-white">Satellite NDVI:</strong>{' '}
-            <span className="text-gray-400">
-              {satellite.available
-                ? 'MODIS MOD13Q1 via ORNL DAAC'
-                : 'MODIS ORNL (unavailable for this location)'}
-            </span>
-          </span>
-        </li>
-      </ul>
+      <div className="space-y-3">
+        <Source
+          status="ok"
+          name="Weather — Open-Meteo"
+          detail="Archive + 16-day forecast · Free, open, real-time"
+        />
+        <Source
+          status="ok"
+          name="Soil Moisture — NASA POWER"
+          detail="Satellite-derived soil wetness (2022–2024 average)"
+        />
+        <Source
+          status="warn"
+          name="Soil Chemistry — Regional Estimates"
+          detail="FAO / USDA / ICAR baselines — not field-specific measurements"
+        />
+        <Source
+          status={satellite.available ? 'ok' : 'warn'}
+          name="Satellite NDVI — MODIS MOD13Q1"
+          detail={
+            satellite.available
+              ? 'ORNL DAAC · 250 m resolution · 16-day composites'
+              : `Unavailable: ${satellite.source}`
+          }
+        />
+      </div>
 
-      <p className="mt-4 border-t border-gray-800 pt-3 text-xs text-gray-600">
-        Analyzed {date} &middot; FieldPulse is open source &middot;{' '}
+      <div className="mt-5 flex items-center justify-between border-t border-white/5 pt-4 text-xs text-gray-600">
+        <span>Analyzed {date}</span>
         <a
-          href="https://github.com/dhwanilpanchani/agrosentinel"
+          href="https://github.com/dhwanilpanchani/FieldPulse"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-green-400 underline hover:text-green-300"
+          className="text-green-500/70 transition-colors hover:text-green-400"
         >
-          GitHub
-        </a>{' '}
-        &middot; Built with Open-Meteo, NASA POWER, MODIS ORNL
-      </p>
+          FieldPulse on GitHub →
+        </a>
+      </div>
     </div>
   )
 }

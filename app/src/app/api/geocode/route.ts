@@ -15,9 +15,10 @@ interface OpenMeteoGeoResponse {
 }
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-  const location = request.nextUrl.searchParams.get('location')?.trim()
+  const raw = request.nextUrl.searchParams.get('location')?.trim() ?? ''
+  const location = raw.replace(/[<>"'`\\]/g, '').trim()
 
-  if (!location) {
+  if (!location || location.length < 2 || location.length > 200) {
     return NextResponse.json({ error: 'location parameter required' }, { status: 400 })
   }
 

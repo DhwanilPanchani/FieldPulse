@@ -19,20 +19,39 @@ interface AnalyzeBody {
   location_name: string
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
-  let body: AnalyzeBody
+const VALID_CROPS = new Set(['wheat', 'rice', 'maize', 'soybean', 'cotton', 'generic'])
 
+function validateBody(raw: unknown): AnalyzeBody | null {
+  if (!raw || typeof raw !== 'object') return null
+  const b = raw as Record<string, unknown>
+  const lat = Number(b.lat)
+  const lon = Number(b.lon)
+  if (!isFinite(lat) || lat < -90 || lat > 90) return null
+  if (!isFinite(lon) || lon < -180 || lon > 180) return null
+  const crop_type = String(b.crop_type ?? '')
+  if (!VALID_CROPS.has(crop_type)) return null
+  const location_name = String(b.location_name ?? '')
+    .replace(/[<>"'`]/g, '')
+    .trim()
+    .slice(0, 200)
+  if (location_name.length < 2) return null
+  return { lat, lon, crop_type, location_name }
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  let raw: unknown
   try {
-    body = (await request.json()) as AnalyzeBody
+    raw = await request.json()
   } catch {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 })
   }
 
-  const { lat, lon, crop_type, location_name } = body
-
-  if (typeof lat !== 'number' || typeof lon !== 'number') {
-    return NextResponse.json({ error: 'lat and lon must be numbers' }, { status: 400 })
+  const body = validateBody(raw)
+  if (!body) {
+    return NextResponse.json({ error: 'Invalid request parameters' }, { status: 400 })
   }
+
+  const { lat, lon, crop_type, location_name } = body
 
   const heatThreshold = getHeatThreshold(crop_type)
 
