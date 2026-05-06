@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "fieldpulse-local",
-  "description": "Local marketplace for Fieldpulse development",
+  "description": "Fieldpulse — Real-time vitals for your land",
   "owner": {
     "name": "Dhwanil Panchani",
     "email": "dhwanilpanchani@gmail.com"
@@ -9,15 +9,17 @@
   "plugins": [
     {
       "name": "fieldpulse",
-      "description": "Multi-agent agricultural intelligence platform",
+      "description": "Multi-agent agricultural intelligence platform. Detects soil degradation and crop failure risk using MODIS satellite, NASA POWER, and Open-Meteo weather data.",
       "author": {
         "name": "Dhwanil Panchani"
       },
       "category": "data",
       "source": {
-        "source": "local",
-        "path": "/Users/dhwanilpanchani/Desktop/agrosentinel"
-      }
+        "source": "git",
+        "url": "https://github.com/DhwanilPanchani/fieldpulse.git",
+        "ref": "main"
+      },
+      "homepage": "https://github.com/DhwanilPanchani/fieldpulse"
     }
   ]
 }
