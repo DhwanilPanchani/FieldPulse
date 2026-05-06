@@ -9,15 +9,14 @@
   "plugins": [
     {
       "name": "fieldpulse",
-      "description": "Multi-agent agricultural intelligence platform. Detects soil degradation and crop failure risk using MODIS satellite, NASA POWER, and Open-Meteo weather data.",
+      "description": "Multi-agent agricultural intelligence. Real-time vitals for your land.",
       "author": {
         "name": "Dhwanil Panchani"
       },
       "category": "data",
       "source": {
-        "source": "git",
-        "url": "https://github.com/DhwanilPanchani/fieldpulse.git",
-        "ref": "main"
+        "source": "github",
+        "repo": "DhwanilPanchani/fieldpulse"
       },
       "homepage": "https://github.com/DhwanilPanchani/fieldpulse"
     }
