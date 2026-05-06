@@ -260,11 +260,10 @@ Python 3.9+
 
 ## Quick Start — Web Dashboard
 
-1. Visit [https://fieldpulse.vercel.app](https://fieldpulse.vercel.app)
+1. Visit [https://fieldpulse.vercel.app](https://fieldpulseagent.vercel.app)
 2. Type a location (e.g. "Bankura, West Bengal") and select your crop
 3. Click **Analyze**
 
-[Dashboard screenshot]
 
 > **Note:** The web dashboard uses Open-Meteo weather data only. Satellite NDVI and soil data require the Claude Code plugin due to CORS restrictions on MODIS ORNL and NASA POWER APIs from browser environments.
 
