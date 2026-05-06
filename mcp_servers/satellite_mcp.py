@@ -13,6 +13,7 @@ Band math reference (Sentinel-2 L2A, surface reflectance, scale factor 10000):
   EVI   = 2.5 * (B08 - B04) /                    Huete et al. 2002
           (B08 + 6*B04 - 7.5*B02 + 1)
 """
+from __future__ import annotations
 
 import asyncio
 import json
@@ -304,7 +305,8 @@ async def get_modis_ndvi_approximate(
             params=params,
         )
         r.raise_for_status()
-        import io, struct, zlib
+        import struct
+        import zlib
         png_bytes = r.content
         if png_bytes[1:4] != b"PNG":
             return None
@@ -485,14 +487,20 @@ def _classify_stress(ndvi: float | None, ndwi: float | None) -> str:
     if ndvi is None:
         return "unknown"
     if ndwi is not None:
-        if ndwi < -0.3 and ndvi < 0.4:  return "critical"
-        if ndwi < -0.1 and ndvi < 0.55: return "high"
-        if ndwi < 0.1  or  ndvi < 0.65: return "medium"
+        if ndwi < -0.3 and ndvi < 0.4:
+            return "critical"
+        if ndwi < -0.1 and ndvi < 0.55:
+            return "high"
+        if ndwi < 0.1 or ndvi < 0.65:
+            return "medium"
         return "low"
     else:
-        if ndvi < 0.25: return "critical"
-        if ndvi < 0.40: return "high"
-        if ndvi < 0.60: return "medium"
+        if ndvi < 0.25:
+            return "critical"
+        if ndvi < 0.40:
+            return "high"
+        if ndvi < 0.60:
+            return "medium"
         return "low"
 
 

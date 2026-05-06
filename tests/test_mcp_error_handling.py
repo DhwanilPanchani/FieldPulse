@@ -7,7 +7,6 @@ for: network timeouts, HTTP errors, and unexpected runtime errors.
 Uses unittest.mock to patch httpx without making real network calls.
 """
 
-import asyncio
 import json
 import sys
 from pathlib import Path
@@ -55,7 +54,8 @@ class TestSoilMCPErrors:
             mock_client.get = AsyncMock(side_effect=httpx.TimeoutException("timed out"))
             mock_client_factory.return_value = mock_client
             # Clear L1 cache
-            import cache as _c; _c._L1.clear()
+            import cache as _c
+            _c._L1.clear()
             result_list = await soil_mcp.call_tool("get_soil_profile", {"lat": 30.9, "lon": 75.8})
             result = parse_result(result_list)
             assert "error" not in result, "Should not return error — regional baseline should cover"
@@ -77,7 +77,8 @@ class TestSoilMCPErrors:
                 side_effect=httpx.HTTPStatusError("rate limited", request=MagicMock(), response=mock_response)
             )
             mock_client_factory.return_value = mock_client
-            import cache as _c; _c._L1.clear()
+            import cache as _c
+            _c._L1.clear()
             result_list = await soil_mcp.call_tool("get_soil_profile", {"lat": 30.9, "lon": 75.8})
             result = parse_result(result_list)
             assert "error" not in result, "Should not return error — regional baseline should cover"
@@ -95,7 +96,8 @@ class TestSoilMCPErrors:
             mock_client.__aexit__ = AsyncMock(return_value=False)
             mock_client.get = AsyncMock(side_effect=RuntimeError("unexpected boom"))
             mock_client_factory.return_value = mock_client
-            import cache as _c; _c._L1.clear()
+            import cache as _c
+            _c._L1.clear()
             result_list = await soil_mcp.call_tool("get_soil_profile", {"lat": 30.9, "lon": 75.8})
             result = parse_result(result_list)
             assert "error" not in result, "Should not return error — regional baseline should cover"
@@ -124,7 +126,8 @@ class TestWeatherMCPErrors:
             mock_client.__aexit__ = AsyncMock(return_value=False)
             mock_client.get = AsyncMock(side_effect=httpx.TimeoutException("timeout"))
             mock_client_factory.return_value = mock_client
-            import cache as _c; _c._L1.clear()
+            import cache as _c
+            _c._L1.clear()
             result_list = await weather_mcp.call_tool("get_climate_history", {"lat": 30.9, "lon": 75.8})
             result = parse_result(result_list)
             assert result["error"] == "api_timeout"

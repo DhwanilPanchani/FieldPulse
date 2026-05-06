@@ -7,16 +7,16 @@ Data sources:
   Archive  : https://archive-api.open-meteo.com/v1/archive   (no auth)
   Forecast : https://api.open-meteo.com/v1/forecast          (no auth)
 """
+from __future__ import annotations
 
 import asyncio
 import json
 import logging
 import math
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, timedelta
 from typing import Any
 
-from dateutil.relativedelta import relativedelta
 from mcp.server import Server
 from mcp.server.stdio import stdio_server
 from mcp.types import TextContent, Tool
@@ -70,11 +70,16 @@ def _compute_spi(monthly_precip: list[float], window: int = 3) -> list[float | N
 
 
 def _classify_drought(spi3: float | None) -> str:
-    if spi3 is None: return "unknown"
-    if spi3 >= -0.5: return "none"
-    if spi3 >= -1.0: return "mild"
-    if spi3 >= -1.5: return "moderate"
-    if spi3 >= -2.0: return "severe"
+    if spi3 is None:
+        return "unknown"
+    if spi3 >= -0.5:
+        return "none"
+    if spi3 >= -1.0:
+        return "mild"
+    if spi3 >= -1.5:
+        return "moderate"
+    if spi3 >= -2.0:
+        return "severe"
     return "extreme"
 
 
@@ -104,7 +109,8 @@ def _count_heat_days_monthly(
 ) -> dict[str, int]:
     monthly: dict[str, int] = {}
     for d_str, t in zip(dates, tmax):
-        if t is None: continue
+        if t is None:
+            continue
         k = d_str[:7]
         monthly.setdefault(k, 0)
         if t >= threshold:
@@ -256,9 +262,12 @@ async def _get_forecast(lat: float, lon: float, days: int) -> dict:
     mean_tmax = round(sum(valid_tmax) / len(valid_tmax), 2) if valid_tmax else None
 
     stress = "low"
-    if h35_count >= 7 or total_def > 80: stress = "critical"
-    elif h35_count >= 3 or total_def > 40: stress = "high"
-    elif h35_count >= 1 or total_def > 15: stress = "medium"
+    if h35_count >= 7 or total_def > 80:
+        stress = "critical"
+    elif h35_count >= 3 or total_def > 40:
+        stress = "high"
+    elif h35_count >= 1 or total_def > 15:
+        stress = "medium"
 
     result = {
         "lat": lat, "lon": lon,

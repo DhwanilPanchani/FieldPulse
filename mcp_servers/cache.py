@@ -11,6 +11,8 @@ Security guarantees:
   - Path traversal blocked: resolved path must be a child of CACHE_DIR
   - Cache keys are sanitised to alphanumeric + hyphen/underscore only
 """
+from __future__ import annotations
+
 import json
 import os
 import re

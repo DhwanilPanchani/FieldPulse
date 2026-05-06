@@ -10,6 +10,7 @@ Flow:
   Always returns a result. Source reported as
   "nasa_power_moisture + {region_key}_baseline".
 """
+from __future__ import annotations
 
 import asyncio
 import json
@@ -374,43 +375,68 @@ REGIONAL_BASELINE = {
 
 
 def _score_soc(soc_gkg: float | None) -> int:
-    if soc_gkg is None: return 50
-    if soc_gkg >= 15.0: return 0
-    if soc_gkg >= 10.0: return 15
-    if soc_gkg >= 6.0:  return 35
-    if soc_gkg >= 3.0:  return 65
+    if soc_gkg is None:
+        return 50
+    if soc_gkg >= 15.0:
+        return 0
+    if soc_gkg >= 10.0:
+        return 15
+    if soc_gkg >= 6.0:
+        return 35
+    if soc_gkg >= 3.0:
+        return 65
     return 90
 
 
 def _score_ph(ph: float | None) -> int:
-    if ph is None: return 20
-    if 6.0 <= ph <= 7.5:  return 0
-    if 5.5 <= ph <  6.0:  return 20
-    if 7.5 <  ph <= 8.0:  return 20
-    if 5.0 <= ph <  5.5:  return 50
-    if 8.0 <  ph <= 8.5:  return 40
-    if ph < 5.0:           return 80
+    if ph is None:
+        return 20
+    if 6.0 <= ph <= 7.5:
+        return 0
+    if 5.5 <= ph < 6.0:
+        return 20
+    if 7.5 < ph <= 8.0:
+        return 20
+    if 5.0 <= ph < 5.5:
+        return 50
+    if 8.0 < ph <= 8.5:
+        return 40
+    if ph < 5.0:
+        return 80
     return 75
 
 
 def _score_bdod(bdod_g_cm3: float | None) -> int:
-    if bdod_g_cm3 is None: return 20
-    if bdod_g_cm3 <= 1.30: return 0
-    if bdod_g_cm3 <= 1.40: return 15
-    if bdod_g_cm3 <= 1.50: return 35
-    if bdod_g_cm3 <= 1.60: return 60
-    if bdod_g_cm3 <= 1.70: return 80
+    if bdod_g_cm3 is None:
+        return 20
+    if bdod_g_cm3 <= 1.30:
+        return 0
+    if bdod_g_cm3 <= 1.40:
+        return 15
+    if bdod_g_cm3 <= 1.50:
+        return 35
+    if bdod_g_cm3 <= 1.60:
+        return 60
+    if bdod_g_cm3 <= 1.70:
+        return 80
     return 95
 
 
 def _score_clay(clay_pct: float | None) -> int:
-    if clay_pct is None: return 20
-    if 20.0 <= clay_pct <= 40.0: return 0
-    if 15.0 <= clay_pct <  20.0: return 15
-    if 40.0 <  clay_pct <= 50.0: return 25
-    if 10.0 <= clay_pct <  15.0: return 35
-    if 50.0 <  clay_pct <= 60.0: return 50
-    if clay_pct < 10.0:           return 60
+    if clay_pct is None:
+        return 20
+    if 20.0 <= clay_pct <= 40.0:
+        return 0
+    if 15.0 <= clay_pct < 20.0:
+        return 15
+    if 40.0 < clay_pct <= 50.0:
+        return 25
+    if 10.0 <= clay_pct < 15.0:
+        return 35
+    if 50.0 < clay_pct <= 60.0:
+        return 50
+    if clay_pct < 10.0:
+        return 60
     return 70
 
 

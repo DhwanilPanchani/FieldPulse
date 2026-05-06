@@ -39,7 +39,7 @@ def validate_field_inputs(
     if not isinstance(radius_km, (int, float)):
         raise ValueError(f"radius_km must be a number, got {type(radius_km).__name__!r}")
     if math.isnan(radius_km) or math.isinf(radius_km):
-        raise ValueError(f"radius_km cannot be NaN or infinite")
+        raise ValueError("radius_km cannot be NaN or infinite")
     if not (0.1 <= radius_km <= 50):
         raise ValueError(f"radius_km must be 0.1 to 50, got {radius_km}")
 

@@ -5,7 +5,6 @@ Covers all invalid inputs, edge cases, and valid boundary values.
 No external network calls. No MCP server startup required.
 """
 
-import math
 import sys
 from pathlib import Path
 
