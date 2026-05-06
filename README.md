@@ -37,7 +37,7 @@ Commands: `/fieldpulse:analyze`, `/fieldpulse:monitor`, `/fieldpulse:report`, `/
 
 **Everyone Else — Web Dashboard**
 
-No Claude account needed. Visit [https://fieldpulse.vercel.app](https://fieldpulse.vercel.app), type a location, click Analyze. Powered by Next.js on Vercel. Weather data only due to browser CORS limitations on satellite/soil APIs — see [Limitations](#honest-limitations).
+No Claude account needed. Visit [https://fieldpulseagent.vercel.app/](https://fieldpulseagent.vercel.app/), type a location, click Analyze. Powered by Next.js on Vercel. Weather data only due to browser CORS limitations on satellite/soil APIs — see [Limitations](#honest-limitations).
 
 ---
 
