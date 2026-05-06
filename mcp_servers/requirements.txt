@@ -3,7 +3,7 @@
 #   pip install pip-tools
 #   pip-compile requirements.txt --generate-hashes -o requirements.lock.txt
 
-mcp==1.9.2
+mcp==1.23.0
 httpx==0.28.1
 pydantic==2.11.4
 cachetools==5.5.2
